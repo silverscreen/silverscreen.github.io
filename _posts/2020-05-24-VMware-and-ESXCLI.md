@@ -108,7 +108,6 @@ ubuntu_gns3
    Config File: /vmfs/volumes/5bc7459f-967eeb48-b3f7-20677cd9a16c/ubuntu_gns3/ubuntu_gns3.vmx
 ```
 
-
 This blog has an excellent overview of esxcli commands:
 * https://www.nakivo.com/blog/most-useful-esxcli-esxi-shell-commands-vmware-environment/
 
@@ -121,7 +120,6 @@ Enable SSH and the Console Shell on your ESXi server:
 
 * ESXi-webgui/Host/Actions/Services/Enable Secure Shell (SSH)
 * ESXi-webgui/Host/Actions/Services/Enable Console Shell
-
 
 Now you should be able to SSH: 
 
@@ -165,7 +163,6 @@ Name  IPv4 Address  IPv4 Netmask   IPv4 Broadcast  Address Type  Gateway     DHC
 vmk1  10.130.2.122  255.255.255.0  10.130.2.255    STATIC        10.130.2.1     false
 ```
 
-
 <br/>
 
 ### Configuring a datastore
@@ -199,7 +196,7 @@ Server Network       vSwitch1                     3        0
 
 <br/>
 
-## Install Vagrant plugins
+### Install Vagrant plugins
 
 I have a feeling I'm going to need this https://github.com/nsidc/vagrant-vsphere.
 
