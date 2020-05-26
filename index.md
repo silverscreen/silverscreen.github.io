@@ -1,6 +1,14 @@
 ### Front Page
 
-This is just a test
+This is a portfolio of my work.
 
+Lawrence Long
 
-#### hello world
+### Heading
+
+Hello gabriel
+
+#### Sub-heading
+
+baked beans
+
