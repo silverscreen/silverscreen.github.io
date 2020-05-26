@@ -4,7 +4,6 @@ title: Automating your network infrastructure
 description: Network automation does not an automated network make.
 summary: How Not to Automate
 comments: false
-tags: [typography]
 ---
 
 I will be exploring some of the open-source automation frameworks available, this case in particular Ansible and Nornir, and the popular version-control system Gitlab, to build a CI/CD (Continuous Integration and Continuous Delivery) pipeline for the deployment and tracking of network changes.
