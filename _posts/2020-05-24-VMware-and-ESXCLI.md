@@ -1,14 +1,10 @@
 ---
 layout: post
-title: VMware and ESXCLI
+title: VMware ESXi and Vagrant
 description: Network automation does not an automated network make.
 summary: How Not to Automate
 comments: false
 ---
-## vSphere and Vagrant
-
-I'll be following this guide:
-* https://hunter2.gitbook.io/darthsidious/building-a-lab/building-a-lab-with-esxi-and-vagrant
 
 An ESXi server can be managed via SSH, this means bypassing the graphical interface. Sometimes you may need to change configuration or require some information which the GUI doesn't provide, in which case the CLI is what you need.
 
@@ -109,10 +105,9 @@ ubuntu_gns3
 ```
 
 This blog has an excellent overview of esxcli commands:
-* https://www.nakivo.com/blog/most-useful-esxcli-esxi-shell-commands-vmware-environment/
+https://www.nakivo.com/blog/most-useful-esxcli-esxi-shell-commands-vmware-environment/
 
 <br/>
-----
 
 ### Enable SSH and Console Shell
 
