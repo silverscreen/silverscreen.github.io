@@ -21,7 +21,7 @@ And an aspirant pythonista with still plenty to learn **>:D**
 
 ### Familiar
 
-- Ansible, AWS, Bash, Cacti, Cisco, Git, JIRA, Junos, Linux, Napalm, Netmiko, Nornir, Paramiko, PRTG, Python, Slack, Ubiquiti, Vagrant, VMware, Windows Server
+- Ansible, AWS, Bash, Cacti, Cisco, CML, Git, GNS3, JIRA, Junos, Linux, Napalm, Netmiko, Nornir, Paramiko, PRTG, Python, Slack, Ubiquiti, Vagrant, VMware, Windows Server
 
 
 ### Screenshot
