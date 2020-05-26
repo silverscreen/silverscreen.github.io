@@ -11,23 +11,18 @@ I'm a lover of open source technologies.
 
 And an aspirant pythonista with still plenty to learn **>:D**
 
-### Features
+### Enjoy
 
-- Responsive design
-- Inline CSS
-- Anchor headings
-- Search
-- Tags & tag pages
-- Security headers (for Netlify hosting)
-- 404 page
-- Compressed CSS and HTML
-- 100/100 score on Lighthouse, Page Speed Insights & Webpagetest
-- Robots.txt
-- Atom & Json feeds
-- Sass
-- Seo optimized (Twitter cards, Facebook Open Graph, Schema.org)
-- Ultra fast (Only ~5kb of CSS)
-- Sidebar navigation
+- Building CI/CD pipelines
+- Creating virtualized test environments
+- Managing network infrastructure as code
+- Helping teams adapt to Scrum methodology
+- Running workshops and educating others on new technologies
+
+### Familiar
+
+- Ansible, Bash, Cisco, Git, JIRA, Junos, Linux, Napalm, Netmiko, Nornir, Paramiko, Python, Slack, Ubiquiti, Vagrant, VMware, Windows Server
+
 
 ### Screenshot
 
