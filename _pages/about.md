@@ -25,4 +25,4 @@ And an aspirant pythonista with still plenty to learn **>:D**
 
 <br/>
 
-![Screenshot](Ceilingcat.png){: .align-center}
+![Screenshot](Ceilingcat.png){: .center-image }
