@@ -6,9 +6,11 @@ summary: Managing VMware hosts with ESXCLI
 comments: false
 ---
 
+**Disclaimer** All **IP addresses** have been modified and are therefore not representational of real life. 
+
 An ESXi server can be managed via SSH, this means bypassing the graphical interface. Sometimes you may need to change configuration or require some information which the GUI doesn't provide, in which case the CLI is what you need.
 
-Here are some ESXCLI commands:
+Here are some ESXCLI commands to demonstrate how you can interact with an ESXi host at SHELL level:
 
 ```bash
 [root@cactus-uk-far-mon:~] esxcli system version get
@@ -119,7 +121,7 @@ Enable SSH and the Console Shell on your ESXi server:
 Now you should be able to SSH: 
 
 ```
-lawrence@cacti:~$ ssh root@10.130.2.122
+lawrence@cacti:~$ ssh root@10.220.2.122
 The time and date of this login have been sent to the system logs.
 
 WARNING:
@@ -145,24 +147,26 @@ According to VMWare Knowledge Base Article 1002866, the public key has to be cop
 [root@cactus-uk-far-mon:~] vi /etc/ssh/keys-root/authorized_keys
 ```
 
+Note that this is not a Linux distribution, VCSA is Linux, whereas ESXi is a proprietary Unix system owned by VMware. Therefore you will not find the same luxuries such as being able to modify the `sshd_config`, I recommend that once your ESXi hosts are added to vCenter, that you disabled SSH from those hosts and only manage them through the vCenter host.
+
 <br/>
 
 ### Setting static IP for the ESXi host
 
-My ESXi server already has a static `10.130.2.122`:
+My ESXi server already has a static `10.220.2.122`:
 
 ```bash
 [root@cactus-uk-far-mon:~] esxcli network ip interface ipv4 get
 Name  IPv4 Address  IPv4 Netmask   IPv4 Broadcast  Address Type  Gateway     DHCP DNS
 ----  ------------  -------------  --------------  ------------  ----------  --------
-vmk1  10.130.2.122  255.255.255.0  10.130.2.255    STATIC        10.130.2.1     false
+vmk1  10.220.2.122  255.255.255.0  10.220.2.255    STATIC        10.220.2.1     false
 ```
 
 <br/>
 
 ### Configuring a datastore
 
-I'll be using an existing datastore which I've named 'VMs':
+You can list out datastores with `esxcli storage filesystem list`:
 
 ```bash
 [root@cactus-uk-far-mon:~] esxcli storage filesystem list
@@ -179,7 +183,7 @@ Mount Point                                        Volume Name  UUID            
 
 ### Network Configuration 
 
-I'll be using the portgroup `Server Network` on `vSwitch1` in `VLAN 0` (`vSwitch0` is the default virtual switch):
+Here I have a `Server Network` on `vSwitch1` in `VLAN 0` (`vSwitch0` is the default virtual switch):
 
 ```bash
 [root@cactus-uk-far-mon:~] esxcli network vswitch standard portgroup list
@@ -187,40 +191,4 @@ Name                 Virtual Switch  Active Clients  VLAN ID
 -------------------  --------------  --------------  -------
 Management VMkernel  vSwitch0                     1        0
 Server Network       vSwitch1                     3        0
-```
-
-<br/>
-
-### Install Vagrant plugins
-
-I have a feeling I'm going to need this https://github.com/nsidc/vagrant-vsphere.
-
-```bash
-lawrence@cacti:~$ vagrant plugin install vagrant-vsphere
-Installing the 'vagrant-vsphere' plugin. This can take a few minutes...
-Fetching: mini_portile2-2.4.0.gem (100%)
-Fetching: nokogiri-1.10.9.gem (100%)
-Building native extensions.  This could take a while...
-Fetching: trollop-2.9.10.gem (100%)
-!    The 'trollop' gem has been deprecated and has been replaced by 'optimist'.
-!    See: https://rubygems.org/gems/optimist
-!    And: https://github.com/ManageIQ/optimist
-Fetching: rbvmomi-1.13.0.gem (100%)
-Fetching: vagrant-vsphere-1.13.4.gem (100%)
-Installed the plugin 'vagrant-vsphere (1.13.4)'!
-```
-
-And maybe these:
-
-```bash
-lawrence@cacti:~$ vagrant plugin install vagrant-vmware-esxi
-Installing the 'vagrant-vmware-esxi' plugin. This can take a few minutes...
-Fetching: iniparse-1.5.0.gem (100%)
-Fetching: vagrant-vmware-esxi-2.5.0.gem (100%)
-Installed the plugin 'vagrant-vmware-esxi (2.5.0)'!
-
-lawrence@cacti:~$ vagrant plugin install vagrant-reload
-Installing the 'vagrant-reload' plugin. This can take a few minutes...
-Fetching: vagrant-reload-0.0.1.gem (100%)
-Installed the plugin 'vagrant-reload (0.0.1)'!
 ```
