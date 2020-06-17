@@ -13,11 +13,11 @@ And an aspirant pythonista with still plenty to learn **>:D**
 
 ### Enjoy
 
-- Building CI/CD pipelines
-- Creating virtualized test environments
-- Managing network infrastructure as code
-- Helping teams adapt to Scrum methodology
-- Running workshops and educating others on new technologies
+- Building workflows and automating otherwise cumbersome tasks.
+- Learning new Python libaries.
+- Managing network infrastructure as code.
+- Helping teams adapt to Scrum methodology.
+- Running workshops and educating others on new technologies.
 
 ### Familiar
 
