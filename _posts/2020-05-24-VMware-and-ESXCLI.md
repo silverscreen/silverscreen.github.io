@@ -1,8 +1,8 @@
 ---
 layout: post
-title: VMware ESXi and Vagrant
-description: Network automation does not an automated network make.
-summary: How Not to Automate
+title: Managing VMware hosts with ESXCLI
+description: Managing VMware hosts with ESXCLI
+summary: Managing VMware hosts with ESXCLI
 comments: false
 ---
 
