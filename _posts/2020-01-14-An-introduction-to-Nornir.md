@@ -6,8 +6,6 @@ summary: An introduction to Nornir
 comments: false
 ---
 
-Nornir is an automation framework written in python and can be imported like any other python library. 
-
 #### At A Glance 
 
 Nornir is an automation framework written in python, for python, rather than having its own configuration language. As nornir allows you to use pure python code, you can troubleshoot and debug it in the same way as you would do with any other python code. Only requires a basic understanding of python to use, therefore you should have an understanding of basic concepts such as variables, functions, and imports.
@@ -42,7 +40,7 @@ You'll notice that it installs a few packages including netmiko and napalm. This
 
 Now that nornir is installed, we can go ahead and import the package from python.
 
-```
+```python
 python
 >>>import nornir.core
 >>>
@@ -75,7 +73,7 @@ Within the `config.yaml` file we can pass a dictionary of options for each secti
 
 Our yaml config file should look something like this:
 
-```
+```yaml
 lawrence@ulysses:~/git/Junos/automation/python/nornir/ipvzero$ cat config.yaml 
 ---
 core: 
@@ -91,7 +89,7 @@ inventory:
 
 If we were to write this in python without a configuration file:
 
-```
+```python
 from nornir import InitNornir
 nr = InitNornir(
     core={"num_workers": 50},
@@ -117,13 +115,13 @@ An inventory typically consists of hosts, groups and defaults. I'll be using the
 
 The schema of SimpleInventory plugin:
 
-```
+```python
 classnornir.plugins.inventory.simple.SimpleInventory(host_file: str = 'hosts.yaml', group_file: str = 'groups.yaml', defaults_file: str = 'defaults.yaml', hosts: Optional[Dict[str, Dict[str, Any]]] = None, groups: Optional[Dict[str, Dict[str, Any]]] = None, defaults: Optional[Dict[str, Any]] = None, *args, **kwargs)
 ```
 
 We begin describing our outermost key which is the name of the host, and then an `InventoryElemement` object. The schema of the object can be seen below by executing: 
 
-```
+```python
 >>> from nornir.core.deserializer.inventory import InventoryElement
 >>> import json
 >>> print(json.dumps(InventoryElement.schema(), indent=4))
@@ -211,7 +209,7 @@ We begin describing our outermost key which is the name of the host, and then an
 
 Within my `hosts.yaml` example, I am using keybased ssh and therefore no password is needed, instead I specify that netmiko `use_keys: True` which will use my public ssh key to authenticate the connection:
 
-```
+```yaml
 lawrence@ulysses:~/git/Junos/automation/python/nornir/ipvzero$ cat inventory/hosts.yaml
 ---
 R1: 
@@ -232,7 +230,7 @@ R1:
 
 The `groups_file` follows the same rules as the `hosts_file`: 
 
-```
+```yaml
 lawrence@ulysses:~/git/Junos/automation/python/nornir/ipvzero$ cat inventory/groups.yaml 
 ---
 
@@ -246,7 +244,6 @@ And finally the defaults file, which follows the same schema as the `InventoryEl
 lawrence@ulysses:~/git/Junos/automation/python/nornir/ipvzero$ cat inventory/defaults.yaml 
 
 [need to build this]
-
 ```
 
 <br/>
@@ -257,7 +254,7 @@ The inventory can be accessed with the `inventory` attribute.
 
 The inventory has two dictionary-like attributes `hosts` and `groups` that can be used to access the hosts and groups respectively:
 
-```
+```python
 >>> from nornir import InitNornir
 >>> nr = InitNornir(config_file="config.yaml")
 >>>
@@ -268,7 +265,7 @@ The inventory has two dictionary-like attributes `hosts` and `groups` that can b
 {'global': Group: global, 'junos_group': Group: junos_group}
 ```
 
-```
+```python
 >>> print(nr.inventory.groups["junos_group"])
 junos_group
 >>> print(nr.inventory.hosts["R1"])
@@ -277,7 +274,7 @@ R1
 
 Hosts and groups are also dict-like objects:
 
-```
+```python
 >>> host = nr.inventory.hosts["R1"]
 >>> host.keys()
 dict_keys(['site', 'role', 'type'])
@@ -297,7 +294,7 @@ dict_keys(['site', 'role', 'type'])
 
 Looking at the groups `inventory/groups.yaml` file:
 
-```
+```yaml
 ---
 global:
     data:
@@ -339,7 +336,7 @@ junos_group:
 
 And my device described within my `inventory/hosts.yaml` file: 
 
-```
+```yaml
 ---
 R1: 
     hostname: 192.168.10.21
@@ -362,7 +359,7 @@ My host device `R1` exists within the group `farringdon`, which in turn belongs 
 
 One of the advantages of nornir vs ansible is that a device/group can exist within multiple groups. 
 
-```
+```python
 >>> from nornir import InitNornir
 >>> nr = InitNornir(config_file="config.yaml")
 >>> print(nr.inventory.groups)
@@ -373,7 +370,7 @@ In this example you can see how data resolution works by iterating recursively o
 
 For instance, device `R1` belongs to `farringdon`, which is part of `junos_group`, and finally `global`. In our example we are querying `"domain"`, information of which is stored in the top group `global`.   
 
-```
+```python
 >>> from nornir import InitNornir
 >>> nr = InitNornir(config_file="config.yaml")
 >>> gns3r1 = nr.inventory.hosts["R1"]
@@ -391,7 +388,7 @@ If however I added the field `domain: nornir.test` to the group `junos_group`, t
 
 Values in `defaults` will be returned if neither the host nor the parents have a specific value for it, for example:
 
-```
+```yaml
 lawrence@ulysses:~/git/Junos/automation/python/nornir/ipvzero$ cat inventory/defaults.yaml 
 ---
 data:
@@ -400,14 +397,14 @@ data:
 
 Here I added a **new data key** in `inventory/defaults.yaml` which I named `cat_breed:`. When I query this new data key, nornir iterates through each group attempting to return the value for this key, upon last resort it finally checks the `defaults.yaml` file and returns the 'default' value for that key `sphynx`: 
 
-```
+```python
 >>> gns3r1["cat_breed"]
 'sphynx'
 ```
 
 Any custom host or group data keys, other than core supported keys, must exist under a data subkey:
 
-```
+```yaml
 --- 
 global:
     data:
@@ -432,7 +429,7 @@ farringdon_firewalls:
         type: firewall
         ntp:
             servers: 
-                - 80.86.38.193 
+                - 10.11.11.11 
     groups: 
         - junos_group
 ```
@@ -445,9 +442,9 @@ farringdon_firewalls:
 
 Here's a host from my `hosts.yaml` that has a custom data key `vrrp-group-1`:
 
-```
+```yaml
 MOO-UK-FAR-SRX2:
-    hostname: 10.130.2.253
+    hostname: 10.220.2.253
     groups:
         - farringdon_firewalls
     platform: junos
@@ -455,14 +452,14 @@ MOO-UK-FAR-SRX2:
         site: farringdon
         type: srx 
         vrrp-group-1: 
-            vip: 149.11.141.138
-            address: 149.11.141.141/29
+            vip: 111.11.111.138
+            address: 111.11.111.141/29
             priority: 90 
 ```            
 
 And here is the group it belongs to within `groups.yaml`:
 
-```
+```yaml
 farringdon_firewalls:
     data:
         country: uk
@@ -470,15 +467,15 @@ farringdon_firewalls:
         type: firewall
         ntp:
             servers:
-                - 80.86.38.193
+                - 10.11.11.11
         vrrp-group-1: 
             vip: 
-                - 149.11.141.138
+                - 111.11.111.138
 ```                
 
 As you can see both files contain the same `data` key `vrrp-group-1`. I'll demonstrate why this creates a problem.
 
-```
+```python
 >>> srx2 = nr.inventory.hosts["MOO-UK-FAR-SRX2"]
 >>> srx2.keys()
 dict_keys(['site', 'type', 'vrrp-group-1', 'country', 'ntp', 'asn', 'domain'])
@@ -488,16 +485,16 @@ As mentioned previously, nornir iterates through the inventory files in the foll
 
 In this instance it is looking for the data subkey `vrrp-group-1`, therefore the first place it checks is within `hosts.yaml`, it finds a match, and doesn't interate through anymore files for this information:
 
-```
+```python
 >>> srx2['vrrp-group-1']                            
-{'address': '149.11.141.141/29', 'priority': 90}
+{'address': '111.11.111.141/29', 'priority': 90}
 ```
 
 This is why the following sub-elements from our dict-like object return only `address` and `priority`, but not `vip` which is stored within the same data subkey attribute but inside `groups.yaml`. The custom subkey is matched within the host file and immediately stops looking and so the value for `vip` is never returned.
 
 Even calling the sub element within the subkey will fail: 
 
-```
+```python
 >>> srx2['vrrp-group-1']['vip']                                                                                                               
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
@@ -508,9 +505,9 @@ Therefore based on this behaviour, it is strongly advised against populating hos
 
 To mitigate this problem, I've moved the conflicting subkey from `groups.yaml` to `hosts.yaml`. The only caveat is that it's an extra line to repeat in my host file, however it also makes more sense to group attributes around a common subkey. 
 
-```
+```yaml
 MOO-UK-FAR-SRX2:
-    hostname: 10.130.2.253
+    hostname: 10.220.2.253
     groups:
         - farringdon_firewalls
     platform: junos
@@ -518,16 +515,16 @@ MOO-UK-FAR-SRX2:
         site: farringdon
         type: srx 
         vrrp-group-1: 
-            vip: 149.11.141.138
-            address: 149.11.141.141/29
+            vip: 111.11.111.111
+            address: 111.11.111.111/29
             priority: 90 
 ```
 
 I'm able to then call the sub-elements from the dict-like objects with:
 
-```
+```python
 >>> srx2['vrrp-group-1']['address']
-'149.11.141.141/29'
+'111.11.111.141/29'
 >>> srx2['vrrp-group-1']['priority']                               
 90
 ```
@@ -544,7 +541,7 @@ More information on accessing sub-elements from a dictionary here: https://stack
 
 Here I've created a task that simply print out the hostname site of each device: 
 
-```
+```python
 from nornir import InitNornir
 from nornir.plugins.tasks import networking, text
 from nornir.plugins.functions.text import print_title, print_result
@@ -579,7 +576,7 @@ https://nornir.readthedocs.io/en/latest/ref/api/nornir.html
 
 Here I have a script that uses napalm to perform a dry run using a jinja template I created:
 
-```
+```python
 #!/usr/bin/env python3
 
 # Author: Lawrence Long
@@ -619,7 +616,7 @@ First I give `InitNornir` a new argument, so that these 'changes' be simulated w
 
 I then use `core={"raise_on_error": True}` to override the `raise_on_error` behavior, so that nornir will automatically raise the exception in the case of an error:
 
-```
+```python
 nr = InitNornir(config_file="config.yaml",
                 dry_run=True,
                 core={"raise_on_error": True}
@@ -634,7 +631,7 @@ Because groups is a list, attempting to filter it using the same method as say `
 
 Therefore when filtering a `group`, the correct method is: 
 
-```
+```python
 dev = nr.filter(F(groups__contains="gns3_firewalls"))
 ```
 
@@ -643,7 +640,7 @@ Then I define a function for my **task** `DryRunConfig`, whereby it will be doin
 1. Render a configuration from the jinja2 template and storing it into a host variable. 
 2. Deploying that configuration using NAPALM.
 
-```
+```python
 def DryRunConfig(task):
     # Transform inventory data to configuration via a template file
     r = task.run(task=text.template_file,
@@ -662,7 +659,7 @@ def DryRunConfig(task):
 
 Here the function `DryRunConfig` has one parameter, `task`:
 
-```
+```python
 def DryRunConfig(task):
 ```
 
@@ -674,7 +671,7 @@ Using the `text` plugin for `tasks` - `nornir.plugins.tasks.text.template_file` 
 
 `path` is the path to the directory with templates. The 'correct' path can also be manipulated with additional variables such as the `host` `platform`:
 
-```
+```python
 path=f"templates/{task.host.platform}"
 ```
 
@@ -692,7 +689,7 @@ templates/
 
 * More information on this here https://nornir.readthedocs.io/en/latest/tutorials/intro/grouping_tasks.html
 
-```
+```python
     # Transform inventory data to configuration via a template file
     r = task.run(task=text.template_file,
                  name="Generate configuration",
@@ -704,14 +701,14 @@ https://nornir.readthedocs.io/en/latest/plugins/tasks/text.html
 
 Then I save the compiled configuration into a host variable `task.host["config"]`:
 
-```
+```python
     # Save the compiled configuration into a host variable 
     task.host["config"] = r.result
 ```    
 
 And lastly to deploy that configuration to the device using NAPALM: 
 
-```
+```python
     # Deploy that configuration to the device using NAPALM
     task.run(task=networking.napalm_configure,
              name='Loading configuration on the device',
@@ -721,7 +718,7 @@ And lastly to deploy that configuration to the device using NAPALM:
 
 The last few lines of code:
 
-```
+```python
 print_title('Playbook to configure the network')
 result = dev.run(task=DryRunConfig)
 print_result(result)
@@ -757,18 +754,18 @@ interfaces {
 
 The host variable called in my j2 template `host.vrrp_group_1.address` is represented inside my `hosts.yaml` file as:
 
-```
+```yaml
 ---
 VSRX1:
-    hostname: 10.130.3.7
+    hostname: 10.220.3.7
     groups:
         - gns3_firewalls
     platform: junos
     data:
         type: vsrx
         vrrp_group_1: 
-            vip: 149.11.141.138
-            address: 149.11.141.141/29
+            vip: 111.11.111.138
+            address: 111.11.111.141/29
             priority: 100
 ```
 
@@ -790,7 +787,7 @@ interfaces {
     ge-0/0/4 {
         unit 0 {
             family inet {
-                address 149.11.141.141/29;
+                address 111.11.111.141/29;
             }
         }
     }
@@ -803,7 +800,7 @@ interfaces {
 +   ge-0/0/4 {
 +       unit 0 {
 +           family inet {
-+               address 149.11.141.141/29;
++               address 111.11.111.141/29;
 +           }
 +       }
 +   }
@@ -819,11 +816,11 @@ interfaces {
 
 https://nornir.readthedocs.io/en/latest/tutorials/intro/executing_tasks.html?highlight=task.host.name#What-is-a-task
 
-OK so what is a task? In it’s simplest form **a task is a function that takes at least a `Task` object as argument**.
+OK so what is a task? In it’s simplest form a task is a function that takes at least a `Task` object as argument.
 
 #### Task Example 1: 
 
-```
+```python
 def hi(task):
     print(f"hi! My name is {task.host.name} and I live in {task.host['site']}")
 
@@ -845,7 +842,7 @@ Within this example I call other tasks from within a task such as `networking.na
 
 Now I can transform my inventory data to config via a jinja template, compile this configuration into a host variable `task.host["config"]` which I then pass to `napalm_configure` and perform `dry_run=True` all as one task:
 
-```
+```python
 def napalm_dryrun(task):
     # transform inventory data to config via a template
     r = task.run(task=text.template_file,
@@ -864,7 +861,7 @@ def napalm_dryrun(task):
 
 By setting this attribute within the taskk itself I can be specific about what I want to happen on a per task basis rather than having to set this option globally when I initialize nornir:
 
-```
+```python
 nr = InitNornir(config_file="config.yaml",
                 dry_run=True,
                 core={"raise_on_error": True}
@@ -881,7 +878,7 @@ The most straightforward way to pass arguments to a Python function is with posi
 
 More information on functions: https://realpython.com/defining-your-own-python-function/#argument-passing
 
-```
+```python
 def hi(task, catbreed):
     print(f"hi! My name is {task.host.name} and I live in {task.host['site']} " + catbreed)
 
@@ -901,7 +898,7 @@ hi! My name is VSRX01 and I live in lab sphyx_arg
 
 You can pass additional arguments such as `connection_options` in your script using the `transform_function`:
 
-```
+```python
 def adapt_host_data(host):
     # This function receives a Host object for manipulation
     host.username = 'nornir'
@@ -921,27 +918,3 @@ nr = InitNornir(
 
 More information here: https://nornir.readthedocs.io/en/latest/howto/transforming_inventory_data.html?highlight=host.connection_options#Using-ConnectionOptions
 
-
-----
-
-To finish...
-
-```
-lawrence@ulysses:~/git/Junos/automation/python/nornir/ipvzero$ python3 nornir_script1.py
-netmiko_send_command************************************************************
-* R1 ** changed : False ********************************************************
-vvvv netmiko_send_command ** changed : False vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv INFO
-Current time: 2020-02-16 16:18:50 UTC
-Time Source:  LOCAL CLOCK 
-System booted: 2020-02-16 12:21:17 UTC (03:57:33 ago)
-Protocols started: 2020-02-16 12:26:13 UTC (03:52:37 ago)
-Last configured: 2020-02-16 16:05:16 UTC (00:13:34 ago) by lawrence
- 4:18PM  up 3:58, 11 users, load averages: 0.67, 0.57, 0.56
-
-^^^^ END netmiko_send_command ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-```
-
------ 
-
-#### Documentation
-* https://nornir.discourse.group/t/using-keybasd-ssh-to-login-to-a-remote-linux-box/106
