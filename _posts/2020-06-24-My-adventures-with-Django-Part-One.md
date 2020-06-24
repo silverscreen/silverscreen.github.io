@@ -281,11 +281,13 @@ polls/
 
 <br/>
 
-### Writing our first **view**
+### Writing our first 'view'
 
-__A **view** is a callable which takes a request and returns a response. This can be more than just a function, and Django provides an example of some classes which can be used as **views**. These allow you to structure your views and reuse code by harnessing inheritance and mixins.__
+In a nutshell, a **view** is a callable which takes a request and returns a response. 
 
-We'll begin by writing our first **view ** in `polls/views.py`. 
+This can be more than just a function, and Django provides an example of some classes which can be used as **views**, allowing you to structure your views and reuse code by harnessing inheritance and mixins.
+
+We'll begin by writing our first view in `polls/views.py`. 
 
 By **default** it will look like this:
 
