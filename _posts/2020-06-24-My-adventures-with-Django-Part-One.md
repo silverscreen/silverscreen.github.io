@@ -6,15 +6,17 @@ summary: My adventures with Django Part One
 comments: false
 ---
 
-On my quest to find a the 'right' GUI framework for me, I have decidedly chose to partner up with Django and see where it takes me. 
+On my quest to find the 'right' GUI framework for me, I have decidedly chose to partner up with Django and see where it takes me. 
 
-Python has a huge number of GUI frameworks available, unfortunately I have felt dissatisfied with the offerings so far. This stems from feeling uncomfortable, knowingly crafting a native desktop application when deep down I knew I should move towards a Web App. Mainly because of the freedom it gives me (and others) to reach my application, and doing away with any sort of installation process. This makes more sense as many of the things I typically interact with day to day, whether it be monitoring or dashboards, are hosted as Web Apps. 
+Python has a huge number of GUI frameworks available, unfortunately I have felt dissatisfied with the offerings so far. This largely stems from feeling uncomfortable, knowingly crafting a native desktop application when deep down I knew I should move towards a Web App. 
+
+Mainly because of the freedom it gives me (and others) to reach my application, and at the same time, doing away with any sort of necessary installation. This makes more sense as many of the things I typically interact with day to day, whether it be monitoring or dashboards, are hosted as Web Apps. **IMO there is nothing worse than having to RDP into a server just to view an application.**
 
 Enter Django. 
 
-Django is Python-based FREE and open-source Web framework designed to make Web development easy. 
+In a nutshell, Django is Python-based FREE and open-source Web framework designed to make Web development easy. 
 
-I will be following the official documentation on how to build my first web application, and then eventually host it with a Web Server such as Nginx. The purpose of this write-up is not to plagiarize the excellent documentation provided by the djangoproject.com, but rather to simplify and also expand upon some things which I feel the tutorial eludes.
+I will be following the official documentation on how to build my first web application, with the intention to host it with a Web Server such as Nginx, probably in AWS. The purpose of this write-up is not to plagiarize the excellent documentation provided by the djangoproject.com, but rather to simplify and also expand upon some things which I feel the tutorial eludes.
 
 https://www.djangoproject.com/
 
