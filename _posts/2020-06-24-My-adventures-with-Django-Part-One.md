@@ -6,7 +6,7 @@ summary: My adventures with Django Part One
 comments: false
 ---
 
-On my quest to find the 'right' GUI framework for me, I have decidedly chose to partner up with Django and see where it takes me. 
+On my quest to find the 'right' GUI framework (for me), I have decidedly chosen to partner up with Django and see where it takes me. 
 
 Python has a huge number of GUI frameworks available, unfortunately I have felt dissatisfied with the offerings so far. This largely stems from feeling uncomfortable, knowingly crafting a native desktop application when deep down I knew I should move towards a Web App. 
 
