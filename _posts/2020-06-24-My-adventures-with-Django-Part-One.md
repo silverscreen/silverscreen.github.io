@@ -10,7 +10,7 @@ On my quest to find the 'right' GUI framework (for me), I have decidedly chosen 
 
 Python has a huge number of GUI frameworks available, unfortunately I have felt dissatisfied with the offerings so far. This largely stems from feeling uncomfortable, knowingly crafting a native desktop application when deep down I knew I should move towards a Web App. 
 
-Mainly because of the freedom it gives me (and others) to reach my application, and at the same time, doing away with any sort of necessary installation. This makes more sense as many of the things I typically interact with day to day, whether it be monitoring or dashboards, are hosted as Web Apps. **IMO there is nothing worse than having to RDP into a server just to view an application.**
+Mainly because of the freedom it gives me (and others) to reach my application, and at the same time, doing away with any sort of necessary installation. This makes more sense as many of the things I typically interact with day to day, whether it be monitoring or dashboards, are hosted as Web Apps. After all, no one wants to RDP into a server just to use an application. With companies such as VMware making the transition from native Windows applications such as vSphere, to a HTML5 based web client. 
 
 Enter Django. 
 
