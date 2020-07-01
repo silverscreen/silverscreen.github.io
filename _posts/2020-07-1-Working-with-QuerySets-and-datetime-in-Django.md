@@ -255,7 +255,9 @@ False
 6. Remember that `now` is **present** day. So whilst we subtract `days=1` from `now`, our **published** date could never exceed `now` by more than one day, which is why `<=` is a valid operator for this case.
 7. Lastly, we would evaluate `pub_date_day.get()` to `now` to confirm that the **published** date is less than or equal to the **present day**, in which case we already determined that our answer was `False` at **step 5** therefore this is `False`.
 
----
+<br/>
+
+----
 
 ### Documentation 
 
