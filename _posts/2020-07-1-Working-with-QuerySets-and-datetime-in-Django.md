@@ -50,7 +50,7 @@ datetime.datetime(2020, 6, 30, 20, 0, 35, 849635, tzinfo=<UTC>)
 
 The Django utility `timezone` uses the `datetime` module which provides **classes** for manipulating dates and times: https://docs.python.org/3/library/datetime.html
 
-Now I'm going to `import datetime` so I can use the `datetime.timedelta()` method to represent the duration of 1 day (`days=1`), of which I'll then subtract **1 day** from my `now`:
+Now I'm going to `import datetime` so I can use the `datetime.timedelta()` method to represent the duration of 1 day (`days=1`), of which I'll then subtract **1 day** from `now`:
 
 ```python
 >>> import datetime
@@ -179,7 +179,7 @@ Now I am ready to start evaluating my date information.
 
 ### Evaluating our data
 
-I'll begin by evaulating the result of `now - datetime.timedelta(days=1)` with `pub_date_day`:
+I'll begin by evaluating the result of `now - datetime.timedelta(days=1)` with `pub_date_day`:
 
 ```python
 >>> now - datetime.timedelta(days=1) <= pub_date_day
@@ -188,7 +188,9 @@ Traceback (most recent call last):
 TypeError: '<=' not supported between instances of 'datetime.datetime' and 'QuerySet'
 ```
 
-So we've received a `TypeError` which means there is a problem with our evaluation. The `TypeError` clearly states that `<=` is not supported between these two instances, that is that `now - datetime.timedelta(days=1)` is being evaluated to `pub_date_day`, and `pub_date_day` is a `<QuerySet>`:
+So we've received a `TypeError` which means there is a problem with our evaluation. 
+
+The `TypeError` clearly states that `<=` is not supported between these two instances, that is that `now - datetime.timedelta(days=1)` is being evaluated to `pub_date_day`, and `pub_date_day` is a `<QuerySet>`:
 
 ```python
 >>> type(pub_date_day)
@@ -247,13 +249,34 @@ False
 
 #### Breaking down our evaluation
 
-1. I subtract `datetime.timedelta(days=1)` from the current time `now` which is `2020, 7, 1`.
-2. This returns a date of a day later `2020, 6, 30`.
-3. I then evaulate this with the less than or equal to operator `<=`.
-4. In this case the publish date which we call with `pud_date_day.get()` is `2020, 6, 23`.
-5. `2020, 6, 30` is greater than `2020, 6, 23` so this evaluates to `False`, therefore it was **NOT published recently**.
-6. Remember that `now` is **present** day. So whilst we subtract `days=1` from `now`, our **published** date could never exceed `now` by more than one day, which is why `<=` is a valid operator for this case.
-7. Lastly, we would evaluate `pub_date_day.get()` to `now` to confirm that the **published** date is less than or equal to the **present day**, in which case we already determined that our answer was `False` at **step 5** therefore this is `False`.
+First I subtract `datetime.timedelta(days=1)` from the current time `now`:
+
+```python
+>>> now - datetime.timedelta(days=1)
+datetime.datetime(2020, 6, 30, 9, 4, 25, 119278, tzinfo=<UTC>)
+```
+
+From the output we can see that a date of a day later (past) is returned.
+
+Then we evaluate our returned `now` value with `pub_date_day.get()` using the less than or equal to operator `<=`:
+
+```python
+>>> now - datetime.timedelta(days=1) <= pub_date_day.get()
+False
+```
+
+So `pub_date_day.get()` has the date `2020, 6, 23`. Our `now` value since, the subtraction looks like `2020, 6, 30` which is greater than `2020, 6, 23`. Therefore this evaluates to `False` as it was **NOT published recently**.
+
+Remember that `now` is **present** day. So whilst we subtract `days=1` from `now`, our **published** date could never exceed `now` by more than one day, which is why `<=` is a valid operator for this case.
+
+Lastly, we would evaluate `pub_date_day.get()` to `now` to confirm that the **published** date is less than or equal to the **present day**, in which case we already determined that our answer was `False` in the previous step so we know this is going to be `False`.
+
+```python
+>>> now - datetime.timedelta(days=1) <= pub_date_day.get() <= now
+False
+```
+
+Easy!
 
 <br/>
 
