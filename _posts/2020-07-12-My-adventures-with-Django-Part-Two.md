@@ -609,7 +609,7 @@ urlpatterns = [
 ]
 ```
 
-We can therefore remove a reliance on specific URL paths defined in our URL configurations by using the `{% url %}` template tag.
+We can therefore remove a reliance on specific URL paths defined in our URL configurations by using the **URL template tag**.
 
 Changing this:
 
