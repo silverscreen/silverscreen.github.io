@@ -543,7 +543,7 @@ Going back to our `detail.html` template, as mentioned, our attribute lookup is 
 <h1>{{ question.question_text }}</h1>
 ```
 
-Next, method-calling happens in the `#{% for %}#` loop; `question.choice_set.all` is interpreted as the Python code `question.choice_set.all()`, returning an interable of `Choice` objects:
+Next, method-calling happens in the **for** loop; `question.choice_set.all` is interpreted as the Python code `question.choice_set.all()`, returning an interable of `Choice` objects:
 
 ```html
 #<ul>
