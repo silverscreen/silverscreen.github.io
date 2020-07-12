@@ -592,21 +592,34 @@ The issue with hardcoding, is that it goes against Django's loose-coupling appro
 
 However, since we defined the **name argument** in the `path()` functions in the `polls.urls` module:
 
+```python
+# polls.urls
+from django.urls import path
+from . import views
 
-
-
+urlpatterns = [
+    # ex: /polls/
+    path('', views.index, name='index'),
+    # ex: /polls/5/
+    path('<int:question_id>/', views.detail, name='detail'),
+    # ex: /polls/5/results/
+    path('<int:question_id>/results/', views.results, name='results'),
+    # ex: /polls/5/vote/
+    path('<int:question_id>/vote/', views.vote, name='vote'),    
+]
+```
 
 We can therefore remove a reliance on specific URL paths defined in our URL configurations by using the **URL template tag**.
 
 Changing this:
 
-```html
+```
         <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
 ```  
 
 To this:
 
-```html
+```
         <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
 ```
 
@@ -672,19 +685,19 @@ app_name = 'polls'
 
 Lastly, to make these changes live, we need to amend the `polls/index.html` **template** from:
 
-```html
+```
         <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
 ```
 
 And use `'polls:detail'` so that it points at the **namespaced** `detail` **view** within `polls`:
 
-```html
+```
         <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
 ```
 
 So now the complete `template/polls/index.html` **template** should look like this:
 
-```html
+```
 {% if latest_question_list %}
     <ul>
     {% for question in latest_question_list %}
@@ -712,7 +725,7 @@ We'll begin by updating our `templates/polls/detail.html` **template** so that i
 
 Old `index.html` code:
 
-```html
+```
 <h1>{{ question.question_text }}</h1>
 <ul>
 {% for choice in question.choice_set.all %}
@@ -723,7 +736,7 @@ Old `index.html` code:
 
 New `index.html` code with `<form>` element:
 
-```html
+```
 <h1>{{ question.question_text }}</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -758,7 +771,7 @@ So `for` each `choice` we have a `radio` button, and a `label` denoting its name
 
 We have another `<input>` element, in this case `type="submit"` named `"vote"`, which defines a submit button which **submits all form values to a form-handler**, the **form-handler** being specified in our forms `form action` attribute:
 
-```html
+```
 <form action="{% url 'polls:vote' question.id %}" method="post">
 ...
 <input type="submit" value="Vote">
@@ -779,7 +792,7 @@ _To summarise a **Cross-site request forgery**, also known as **one-click attack
 
 So now http://localhost:8000/polls/1/ should return the following in our browser:
 
-```html
+```
 <html><head></head><body><h1>Who says "Impressive work, Ms. Vance" ?</h1>
 
 <form action="/polls/1/vote/" method="post">
