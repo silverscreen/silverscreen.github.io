@@ -628,7 +628,7 @@ This way, Django looks up the **URL definition** as specified in the `polls.urls
 ```python
 # polls.urls
 ...
-    # the 'name' value as called by the {% url %} template tag
+    # the 'name' value as called by the url template tag
     path('<int:question_id>/', views.detail, name='detail'),
 ...
 ```
