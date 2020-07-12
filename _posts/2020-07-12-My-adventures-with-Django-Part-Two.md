@@ -1,8 +1,8 @@
 ---
 layout: post
-title: My adventures with Django Part Two
-description: My adventures with Django Part Two
-summary: My adventures with Django Part Two
+title: Django Part Two
+description: Django Part Two
+summary: Django Part Two
 comments: false
 ---
 
