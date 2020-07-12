@@ -592,22 +592,9 @@ The issue with hardcoding, is that it goes against Django's loose-coupling appro
 
 However, since we defined the **name argument** in the `path()` functions in the `polls.urls` module:
 
-```python
-# polls.urls
-from django.urls import path
-from . import views
 
-urlpatterns = [
-    # ex: /polls/
-    path('', views.index, name='index'),
-    # ex: /polls/5/
-    path('<int:question_id>/', views.detail, name='detail'),
-    # ex: /polls/5/results/
-    path('<int:question_id>/results/', views.results, name='results'),
-    # ex: /polls/5/vote/
-    path('<int:question_id>/vote/', views.vote, name='vote'),    
-]
-```
+
+
 
 We can therefore remove a reliance on specific URL paths defined in our URL configurations by using the **URL template tag**.
 
