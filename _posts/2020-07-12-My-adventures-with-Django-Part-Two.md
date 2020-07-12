@@ -658,7 +658,7 @@ Currently our project `first_project` only has one app named `polls`. In reality
 
 **Django is able to differentiate the URL names between them by us adding namespaces to our URLconf.**
 
-For example, without namespacing, another app within our project such as a blog, might have a `detail` **view** such as the one within our `polls` app, therefore Django would not know which **app view** to create for the URL when using the `{% url %}` template tag.
+For example, without namespacing, another app within our project such as a blog, might have a `detail` **view** such as the one within our `polls` app, therefore Django would not know which **app view** to create for the URL when using the URL template tag.
 
 #### Setting the application namespace
 
@@ -778,13 +778,13 @@ We have another `<input>` element, in this case `type="submit"` named `"vote"`, 
 </form>
 ```
 
-The `method="post"` method attribute specifies how to send our form-data, in this case to the URL specified within the `action` attribute `"{% url 'polls:vote' question.id %}"`. The **form-data** can be sent as either:
+The `method="post"` method attribute specifies how to send our form-data, in this case to the URL specified within the `action` attribute `"url 'polls:vote' question.id"`. The **form-data** can be sent as either:
 * **URL variables** `method="get"`.
 * Or as a **HTTP post transaction** with `method="post"`.
 
 Whenever creating a form that alters data server-side, use `method="post"` (as opposed to `method="get"`), this is a general rule for Web development.
 
-As we're creating a POST form (which can have the effect of modifying data), we need to consider **security** and **Cross Site Request Forgeries**. Thankfully Django has a system for protecting against such things, therefore all POST forms that are targeted at internal URLs should  use `{% csrf_token %}` **template tag**.
+As we're creating a POST form (which can have the effect of modifying data), we need to consider **security** and **Cross Site Request Forgeries**. Thankfully Django has a system for protecting against such things, therefore all POST forms that are targeted at internal URLs should  use `csrf_token` **template tag**.
 
 _To summarise a **Cross-site request forgery**, also known as **one-click attack** or **session riding** and abbreviated as CSRF or XSRF, is a type of malicious exploit of a website where unauthorized commands are transmitted from a user that the web application trusts._
 
