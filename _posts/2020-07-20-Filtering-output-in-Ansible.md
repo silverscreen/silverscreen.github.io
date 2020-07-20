@@ -270,23 +270,12 @@ ok: [breen] => {
 Now if I wanted to filter this output further and access the `hostname` value, I simply need append my dictionary lookup with the `.hostname` key:
 
 ```yaml
-    - name: Set hostname fact
-      set_fact: 
-        dev_hostname: junos_facts.ansible_facts.junos.hostname
-
-    - name: show junos_facts.ansible_facts.junos.hostname
-      debug:
-        var: dev_hostname
+    - name: Get hostname
+      debug: 
+        var: junos_facts.ansible_facts.junos.hostname
 ```
 
-This way, I am able to display specific data about my network device and create my own facts based on these key-value pairs by calling them from within my dictionary:
-
-```json
-TASK [show junos_facts.ansible_facts.junos.hostname] ******************************************************************************************************************************************
-ok: [breen] => {
-    "dev_hostname": "junos_facts.ansible_facts.junos.hostname"
-}
-```
+This way, I am able to display specific data about my network device and create my own facts based on these key-value pairs by calling them from within my dictionary.
 
 There is however, a simpler way to access these attributes, and it involves using the [ansible_facts](https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html) **dictionary**. 
 
