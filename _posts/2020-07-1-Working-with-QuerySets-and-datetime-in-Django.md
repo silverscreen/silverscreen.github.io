@@ -6,7 +6,7 @@ summary: Working with QuerySets and datetime in Django
 comments: false
 ---
 
-I've written this to help clarify a few things for a colleague of mine whom has been following the 'Writing your first Django app' on djangoproject.com, and wanted to better understand the interaction between QuerySets and using Django's utilities such as `timezone`.
+I've written this to help clarify a few things for a friend of mine whom has been following the 'Writing your first Django app' on djangoproject.com, and wanted to better understand the interaction between QuerySets and using Django's utilities such as `timezone`.
 
 ### The code in question
 
