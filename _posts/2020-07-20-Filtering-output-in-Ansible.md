@@ -440,9 +440,11 @@ ok: [localhost] => {
 Now the key thing to note here, is that this is a **list of strings**, which means we should in fact be able to access each string (or line) of our output by calling its corresponding index:
 
 ```yaml
+{% raw %}
     - name: Return first line in my list with index as key; 'Architecture:'
       debug:
         msg: "{{ lscpu_info.stdout_lines[0] }}"
+{% endraw %}        
 ```
 
 By calling the index `[0]` I can get the first element from our list, in this case, the `Architecture` of our CPU:
