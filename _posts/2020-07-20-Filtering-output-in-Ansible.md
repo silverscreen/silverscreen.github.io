@@ -309,6 +309,7 @@ There will however, be times that you need to work with output that isn't contai
 For example, lets use the `command` module and get some CPU information about my machine using `lscpu`:
 
 ```yaml
+{% raw %}
 # Gets information from output using split() and lists
 ---
 - name: Get CPU info
@@ -323,6 +324,7 @@ For example, lets use the `command` module and get some CPU information about my
     - name: Return CPU information
       debug:
         msg: "{{ lscpu_info }}"
+{% endraw %}
 ```        
 
 Now lets run the playbook and look at the output stored in our `{{ lscpu_info }}` variable:
