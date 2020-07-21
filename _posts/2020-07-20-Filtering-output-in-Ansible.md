@@ -13,6 +13,7 @@ Welcome to [Return Values](https://docs.ansible.com/ansible/latest/reference_app
 Take for example, the [juniper_junos_facts](https://junos-ansible-modules.readthedocs.io/en/2.0.0/juniper_junos_facts.html) module, which collects fact information from a remote Junos device using PyEZ, and returns the results within a **dictionary**:
 
 ```yaml
+{% raw %}        
   tasks:
     - name: save device configuration
       juniper_junos_facts:
@@ -21,12 +22,14 @@ Take for example, the [juniper_junos_facts](https://junos-ansible-modules.readth
 
     - name: show junos_facts
       debug:
-        var: junos_facts
+        var: junos_facts      
+{% endraw %}        
 ```
 
 For each device, `juniper_junos_facts` returns a dictionary which I then **register** as `junos_facts`. Within my returned `junos_facts` dictionary, are two keys that appear to hold the same information; `ansible_facts` and `facts`:
 
 ```json
+{% raw %}        
 TASK [show junos_facts] **************************************************************************************************************************************************************************************************
 ok: [breen] => {
     "junos_facts": {
@@ -178,7 +181,8 @@ ok: [breen] => {
             "The value 2222 (type int) in a string field was converted to '2222' (type string). If this does not look like what you expect, quote the entire value to ensure it does not change."
         ]
     }
-}
+}      
+{% endraw %}
 ```
 
 The nested `junos_facts.ansible_facts.junos` key contains facts returned by our `juniper_junos_facts` module, however, the `junos_facts.facts` key duplicates these same facts, primarily for backwards compatibility. I can reduce the output by calling only one of the nested keys, preventing the facts from being duplicated:
@@ -192,6 +196,7 @@ The nested `junos_facts.ansible_facts.junos` key contains facts returned by our 
 Now when I run the playbook, I'll receive only one set of facts, specifically those stored in `junos_facts.ansible_facts.junos`:
 
 ```json
+{% raw %}        
 TASK [show junos_facts.ansible_facts.junos] ******************************************************************************************************************************************************************************
 ok: [breen] => {
     "junos_facts.ansible_facts.junos": {
@@ -264,7 +269,8 @@ ok: [breen] => {
         },
         "virtual": null
     }
-}
+}      
+{% endraw %}
 ```
 
 Now if I wanted to filter this output further and access the `hostname` value, I simply need append my dictionary lookup with the `.hostname` key:
@@ -292,10 +298,12 @@ Meaning that I need not register my dictionary in a variable with `register: jun
 See how much simpler it is to use `junos.hostname` instead of `junos_facts.ansible_facts.junos.hostname`, and yet the output is identical:
 
 ```json
+{% raw %}        
 TASK [show hostname] **************************************************************************************************************************************************************************
 ok: [breen] => {
     "junos.hostname": "vqfx-re"
-}
+}     
+{% endraw %}
 ```
 
 <br/>
@@ -330,6 +338,7 @@ For example, lets use the `command` module and get some CPU information about my
 Now lets run the playbook and look at the output stored in our `{{ lscpu_info }}` variable:
 
 ```json
+{% raw %}        
 TASK [Return all CPU Information as a list of strings] ****************************************************************************************************************************************
 ok: [localhost] => {
     "msg": {
@@ -373,7 +382,8 @@ ok: [localhost] => {
             "Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt dtherm ida arat pln pts md_clear flush_l1d"
         ]
     }
-}
+}     
+{% endraw %}
 ```
 
 Yikes, this is definitely a far cry from what we were working with previously when each attribute was conveniently nested within a key inside our dictionary.
@@ -393,6 +403,7 @@ Now that we know how we're going to return our output, we need to figure out how
 First let's take another look at our output, this time using `lscpu_info.stdout_lines`:
 
 ```json
+{% raw %}        
 TASK [Return all CPU Information as a list of strings] ****************************************************************************************************************************************
 ok: [localhost] => {
     "msg": [
@@ -422,7 +433,8 @@ ok: [localhost] => {
         "NUMA node0 CPU(s):   0-7",
         "Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt dtherm ida arat pln pts md_clear flush_l1d"
     ]
-}
+}   
+{% endraw %}
 ```
 
 Now the key thing to note here, is that this is a **list of strings**, which means we should in fact be able to access each string (or line) of our output by calling its corresponding index:
@@ -436,24 +448,29 @@ Now the key thing to note here, is that this is a **list of strings**, which mea
 By calling the index `[0]` I can get the first element from our list, in this case, the `Architecture` of our CPU:
 
 ```json
+{% raw %}        
 ok: [localhost] => {
     "msg": "Architecture:        x86_64"
-}
+}     
+{% endraw %}
 ```
 
 So now that I have my `Archiecture` string, I can use the Python `.split()` method to split my string into a list of elements which by default, use whitespace as a delimiter:
 
 ```yaml
+{% raw %}        
     - name: Use split() method on strings at index 0 and 9
       debug:
         msg: 
           - "{{ lscpu_info.stdout_lines[0].split() }}"
-          - "{{ lscpu_info.stdout_lines[9].split() }}"  
+          - "{{ lscpu_info.stdout_lines[9].split() }}"          
+{% endraw %}          
 ```          
 
 This provides me with the following strings in list format:
 
 ```json
+{% raw %}        
 ok: [localhost] => {
     "msg": [
         [
@@ -466,51 +483,61 @@ ok: [localhost] => {
             "GenuineIntel"
         ]
     ]
-}
+}    
+{% endraw %}
 ```
 
 Now I can store my lists as facts:
 
 ```yaml
+{% raw %}        
     - name: Set lscpu facts; arch_cpu_var, vendor_cpu_var, mhz_cpu_var
       set_fact: 
         arch_cpu_var: "{{ lscpu_info.stdout_lines[0].split() }}"
         opmode_cpu_var: "{{ lscpu_info.stdout_lines[1].split() }}"
         vendor_cpu_var: "{{ lscpu_info.stdout_lines[9].split() }}"
-        mhz_cpu_var: "{{ lscpu_info.stdout_lines[14] }}"
+        mhz_cpu_var: "{{ lscpu_info.stdout_lines[14] }}"   
+{% endraw %}
 ```
 
 And to access the elements containing the values I need, I call the index of the element I want, just as I did originally with `.stdout_lines`:
 
 ```yaml
+{% raw %}        
     - name: Print facts by calling the index of my stored lists
       debug:
         msg: 
           - "The Architecture of my CPU is {{ arch_cpu_var[1] }}" 
-          - "The Vendor ID of my CPU is {{ vendor_cpu_var[2] }}"
+          - "The Vendor ID of my CPU is {{ vendor_cpu_var[2] }}"     
+{% endraw %}          
 ```          
 
 And that's how you can create variables from strings using the `.split()` method:
 
 ```json
+{% raw %}        
 TASK [Print facts by calling the index of my stored lists] ************************************************************************************************************************************
 ok: [localhost] => {
     "msg": [
         "The Architecture of my CPU is x86_64",
         "The Vendor ID of my CPU is GenuineIntel"
     ]
-}
+}     
+{% endraw %}
 ```
 
 In the case of `mhz_cpu_var:`, I did not use `split()`, instead I only stored my fact as a string and not a list:
 
 ```yaml
+{% raw %}        
         mhz_cpu_var: "{{ lscpu_info.stdout_lines[14] }}"
+{% endraw %}
 ```        
 
 I did this purposely so I could continue to work with my output by applying some basic regex like so:
 
 ```yaml
+{% raw %}        
     # regex - lets extract the decimal number from our current "CPU MHz: 3060.525"
     - name: Extract integer and float from fact using regex_search; mhz_cpu_var
       debug:
@@ -521,11 +548,13 @@ I did this purposely so I could continue to work with my output by applying some
               | regex_search('\\d+') }}"
           - "I extracted the following float: {{ mhz_cpu_var 
               | regex_search('\\d+'+'\\D+'+'\\d+') }}"   
+{% endraw %}              
 ```              
 
 Regex will not work on a list, instead it requires a string to parse. Therefore by combining regex with my string data, I can filter my string for the float value of my current CPU MHz:
 
 ```json
+{% raw %}
 ok: [localhost] => {
     "msg": [
         "This is my mhz_cpu_var list: CPU MHz:             3138.574",
@@ -533,6 +562,7 @@ ok: [localhost] => {
         "I extracted the following float: 3138.574"
     ]
 }
+{% endraw %}  
 ```
 
 Pretty neat huh.
@@ -544,6 +574,7 @@ Pretty neat huh.
 Sometimes you will get output in the following format
 
 ```json
+{% raw %}
     "msg": [
         [
             "uptime: 2w4d1h52m10s",
@@ -566,13 +597,16 @@ Sometimes you will get output in the following format
             "                 platform: MikroTik"
         ]
     ]
+{% endraw %}      
 ```
 
 Notice the two `[ [` braces, this means you'll need to access the **first** list before you can access the **second** list nested within. You can do this just like you would in Python, by simply calling both indexes:
 
 ```
+{% raw %}
 set_fact: 
         uptime_var: "{{ test_output.stdout_lines[0][0].split() }}"
+{% endraw %}          
 ```
 
 The first `[0]` index calls the first element of the list, referring to the list nested inside, hence the second index call `[0][0]` which calls the uptime string `"uptime: 2w4d1h52m10s"`.
@@ -590,38 +624,46 @@ This is where regex comes in.
 Before I can start working with my `lscpu` output, I first need to convert my **list of strings** into **one string** so that all of my data can be read by one regex statement:
 
 ```yaml
+{% raw %}
     - name: Use join() method to create one long string
       debug:
         # Joins list output into one long STRING with 'join(' ')'
         msg: "{{ lscpu_info.stdout_lines 
               | join(' ') }}"
+{% endraw %}                
 ```
 
 By using the `.join()` method I get list of strings from `.stdout_lines` returned in one packaged string:
 
 ```json
+{% raw %}
 ok: [localhost] => {
     "msg": "Architecture:        x86_64 CPU op-mode(s):      32-bit, 64-bit Byte Order:          Little Endian CPU(s):              8 On-line CPU(s) list: 0-7 Thread(s) per core:  2 Core(s) per socket:  4 Socket(s):           1 NUMA node(s):        1 Vendor ID:           GenuineIntel CPU family:          6 Model:               60 Model name:          Intel(R) Core(TM) i7-4790K CPU @ 4.00GHz Stepping:            3 CPU MHz:             3138.574 CPU max MHz:         4400.0000 CPU min MHz:         800.0000 BogoMIPS:            8000.03 Virtualisation:      VT-x L1d cache:           32K L1i cache:           32K L2 cache:            256K L3 cache:            8192K NUMA node0 CPU(s):   0-7 Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt dtherm ida arat pln pts md_clear flush_l1d"
 }
+{% endraw %}  
 ```
 
 Now am I ready to begin working with my string data, so let's attempt something a little harder and grab the contents of `Model name:` using only regex:
 
 ```yaml
+{% raw %}
     - name: Use regex_search on string to get substring
       debug:
         # Model name:          Intel(R) Core(TM) i7-4790K CPU @ 4.00GHz Stepping:
         msg: "{{ lscpu_info.stdout_lines 
               | join(' ') 
               | regex_search('(Model name:.*Stepping:)') }}"
+{% endraw %}                
 ```    
 
 Here I've used `regex_search` to get the **substring** of my string, using `Model name:` as a start and `Stepping:` as an end:
 
 ```json
+{% raw %}
 ok: [localhost] => {
     "msg": "Model name:          Intel(R) Core(TM) i7-4790K CPU @ 4.00GHz Stepping:"
 }
+{% endraw %}  
 ```
 
 However I still need to remove `Model name:`, `Stepping:`, and all the whitespace in between to get the information I want. 
@@ -629,25 +671,30 @@ However I still need to remove `Model name:`, `Stepping:`, and all the whitespac
 To achieve this I'm going to use `regex_replace` to search and replace everything in my string up until `Model name:` with nothing `''`. Afterwhich I will **pipe** the output of my first replace to another regex query but this time, removing everything from `Stepping:` onwards, leaving only the information I want in-between:
 
 ```yaml
+{% raw %}
     - name: Trim substring with regex_replace and extract model name info
       debug:
         msg: "{{ lscpu_info.stdout_lines 
               | join(' ') 
               | regex_replace('(.*Model name:\\s*)', '') 
               | regex_replace('(\\s*Stepping:.*)', '') }}"
+{% endraw %}                
 ``` 
 
 And now I get the exactly the information I wanted within my substring:
 
 ```
+{% raw %}
 ok: [localhost] => {
     "msg": "Intel(R) Core(TM) i7-4790K CPU @ 4.00GHz"
 }
+{% endraw %}  
 ```
 
 Now I can store this inside a fact with `set_facts` and simply use it as a variable in the rest of my playbook if I wish to do so:
 
 ```yaml
+{% raw %}
     - name: Set fact model name information
       set_fact: 
         model_name: "{{ lscpu_info.stdout_lines 
@@ -658,6 +705,7 @@ Now I can store this inside a fact with `set_facts` and simply use it as a varia
     - name: Print model_name var
       debug:
         var: model_name
+{% endraw %}  
 ```        
 
 <br/>
